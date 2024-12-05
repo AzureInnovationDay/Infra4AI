@@ -4,7 +4,7 @@ Bienvenue sur le workshop Infra for AI ! Comme expliqué lors de la présentatio
 
 Mais pour commencer, il faut activer ta souscription Azure pour le lab.
 
-Activation des labs
+## Création d'un nouveau compte Microsoft
 
 Pour activer ton lab, récupère un code d'activation auprès d'un des proctors.
 
@@ -16,6 +16,8 @@ Une fois ton code obtenu, va créer un nouveau compte Microsoft (https://go.micr
 ATTENTION : n'utilises pas ton compte d'entreprise Office 365 ou to Azure Pass sera perdu !
 
 Conserve bien ton login et mot de passe.
+
+## Activation de ton pass Azure
 
 Ouvre un second onglet et connecte toi à https://www.microsoftazurepass.com/. Assure toi de bien être connecté avec ton nouveau compte Outlook.fr créé précédemment.
 
