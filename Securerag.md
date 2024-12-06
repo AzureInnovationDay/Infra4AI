@@ -131,6 +131,8 @@ he following procedure creates a virtual network with a resource subnet, an Azur
 
 1. Select **Review + create** at the bottom of the screen, and when validation passes, select **Create**.
 
+## Configure Azure OpenAI
+
 ### Enable managed identity
 
 To allow your Azure AI Search and Storage Account to recognize your Azure OpenAI Service via Microsoft Entra ID authentication, you need to assign a managed identity for your Azure OpenAI Service. The easiest way is to toggle on system assigned managed identity on Azure portal.
