@@ -6,7 +6,8 @@ Use this guide to learn how to configure networking and access when using Azure 
 
 When you use Azure OpenAI On Your Data to ingest data from Azure blob storage, local files or URLs into Azure AI Search, the following process is used to process the data.
 
-:::image type="content" source="../media/use-your-data/ingestion-architecture.png" alt-text="A diagram showing the process of ingesting data." lightbox="../media/use-your-data/ingestion-architecture.png":::
+![image](/media/use-your-data/ingestion-architecture.png)
+
 
 * Steps 1 and 2 are only used for file upload.
 * Downloading URLs to your blob storage is not illustrated in this diagram. After web pages are downloaded from the internet and uploaded to blob storage, steps 3 onward are the same.
@@ -25,71 +26,11 @@ For the managed identities used in service calls, only system assigned managed i
 
 ## Inference architecture
 
-:::image type="content" source="../media/use-your-data/inference-architecture.png" alt-text="A diagram showing the process of using the inference API." lightbox="../media/use-your-data/inference-architecture.png":::
+![image](/media/use-your-data/inference-architecture.png)
 
 When you send API calls to chat with an Azure OpenAI model on your data, the service needs to retrieve the index fields during inference to perform fields mapping. Therefore the service requires the Azure OpenAI identity to have the `Search Service Contributor` role for the search service even during inference.
 
 If an embedding dependency is provided in the inference request, Azure OpenAI will vectorize the rewritten query, and both query and vector are sent to Azure AI Search for vector search.
-
-## Document-level access control
-
-> [!NOTE] 
-> Document-level access control is supported for Azure AI search only.
-
-Azure OpenAI On Your Data lets you restrict the documents that can be used in responses for different users with Azure AI Search [security filters](/azure/search/search-security-trimming-for-azure-search-with-aad). When you enable document level access, Azure AI Search will trim the search results based on user Microsoft Entra group membership specified in the filter. You can only enable document-level access on existing Azure AI Search indexes. To enable document-level access:
-
-1. To register your application and create users and groups, follow the steps in the [Azure AI Search documentation](/azure/search/search-security-trimming-for-azure-search-with-aad).
-1. [Index your documents with their permitted groups](/azure/search/search-security-trimming-for-azure-search-with-aad#index-document-with-their-permitted-groups). Be sure that your new [security fields](/azure/search/search-security-trimming-for-azure-search#create-security-field) have the schema:
-        
-    ```json
-    {"name": "group_ids", "type": "Collection(Edm.String)", "filterable": true }
-    ```
-
-    `group_ids` is the default field name. If you use a different field name like `my_group_ids`, you can map the field in [index field mapping](../concepts/use-your-data.md#index-field-mapping).
-
-1. Make sure each sensitive document in the index has this security field value set to the permitted groups of the document.
-1. In [Azure OpenAI Studio](https://oai.azure.com/portal), add your data source. in the [index field mapping](../concepts/use-your-data.md#index-field-mapping) section, you can map zero or one value to the **permitted groups** field, as long as the schema is compatible. If the **permitted groups** field isn't mapped, document level access is disabled. 
-
-**Azure OpenAI Studio**
-
-Once the Azure AI Search index is connected, your responses in the studio have document access based on the Microsoft Entra permissions of the logged in user.
-
-**Web app**
-
-If you are using a published [web app](./use-web-app.md), you need to redeploy it to upgrade to the latest version. The latest version of the web app includes the ability to retrieve the groups of the logged in user's Microsoft Entra account, cache it, and include the group IDs in each API request.
-
-**API**
-
-When using the API, pass the `filter` parameter in each API request. For example:
-
-> [!IMPORTANT]
-> The following is for example only. If you use an API key, store it securely somewhere else, such as in [Azure Key Vault](/azure/key-vault/general/overview). Don't include the API key directly in your code, and never post it publicly.
-
-For more information about AI services security, see [Authenticate requests to Azure AI services](/azure/ai-services/authentication).
-
-```json
-{
-    "messages": [
-        {
-            "role": "user",
-            "content": "who is my manager?"
-        }
-    ],
-    "data_sources": [
-        {
-            "type": "azure_search",
-            "parameters": {
-                "endpoint": "<AZURE_AI_SEARCH_ENDPOINT>",
-                "key": "<AZURE_AI_SEARCH_API_KEY>",
-                "index_name": "<AZURE_AI_SEARCH_INDEX>",
-                "filter": "my_group_ids/any(g:search.in(g, 'group_id1, group_id2'))"
-            }
-        }
-    ]
-}
-```
-* `my_group_ids` is the field name that you selected for **Permitted groups** during [fields mapping](../concepts/use-your-data.md#index-field-mapping).
-* `group_id1, group_id2` are groups attributed to the logged in user. The client application can retrieve and cache users' groups.
 
 
 ## Resource configuration
@@ -100,7 +41,9 @@ This article describes network settings related to disabling public network for 
 
 ## Create resource group
 
-Create a resource group, so you can organize all the relevant resources. The resources in the resource group include but are not limited to:
+Create a resource group, so you can organize all the relevant resources. Choose the name you like and be sure to choose "France central" as a location.
+
+The resources in the resource group include but are not limited to:
 * One Virtual network
 * Three key services: one Azure OpenAI, one Azure AI Search, one Storage Account
 * Three Private endpoints, each is linked to one key service
@@ -111,20 +54,82 @@ Create a resource group, so you can organize all the relevant resources. The res
 
 ## Create virtual network
 
-The virtual network has three subnets. 
+The virtual network has four subnets. 
 
-1. The first subnet is used for the virtual network gateway.
+1.
+1. The first subnet is used for the virtual machine.
 1. The second subnet is used for the private endpoints for the three key services.
 1. The third subnet is empty, and used for Web App outbound virtual network integration.
 
-:::image type="content" source="../media/use-your-data/virtual-network.png" alt-text="A diagram showing the virtual network architecture." lightbox="../media/use-your-data/virtual-network.png":::
+In this lab, when asked to create a virtual network
 
+- choose the existing resource group
+- name it "vnet-lab-contoso"
+- Choose "France Central" as location
+- Add three  Subnets:
+    - one called "Subnet-2", dedicated to the private endpoints, using the 10.0.1.0/24 prefix
+    - a second one called 
 
-## Configure Azure OpenAI
+You can use the 
 
-### Enabled custom subdomain
+To create a virtual network, you can refer to this documentation : https://learn.microsoft.com/en-us/azure/virtual-network/quick-create-portal.
 
-The [custom subdomain](/azure/ai-services/cognitive-services-custom-subdomains) is required for Microsoft Entra ID based authentication, and private DNS zone. If the Azure OpenAI resource is created using ARM template, the custom subdomain must be specified explicitly.
+he following procedure creates a virtual network with a resource subnet, an Azure Bastion subnet, and an Azure Bastion host.
+
+1. In the portal, search for and select **Virtual networks**.
+
+1. On the **Virtual networks** page, select **+ Create**.
+
+1. On the **Basics** tab of **Create virtual network**, enter or select the following information:
+
+    | Setting | Value |
+    |---|---|
+    | **Project details** |  |
+    | Subscription | Select your subscription. |
+    | Resource group | Select **Create new**. </br> Enter **test-rg** in Name. </br> Select **OK**. |
+    | **Instance details** |  |
+    | Name | Enter **vnet-1**. |
+    | Region | Select **East US 2**. |
+
+    :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/create-virtual-network-basics.png" alt-text="Screenshot of Basics tab of Create virtual network in the Azure portal." lightbox="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/create-virtual-network-basics.png":::
+
+1. Select **Next** to proceed to the **Security** tab.
+
+1. Select **Enable Bastion** in the **Azure Bastion** section of the **Security** tab.
+
+    Azure Bastion uses your browser to connect to VMs in your virtual network over secure shell (SSH) or remote desktop protocol (RDP) by using their private IP addresses. The VMs don't need public IP addresses, client software, or special configuration. For more information about Azure Bastion, see [Azure Bastion](../articles/bastion/bastion-overview.md)
+
+    >[!NOTE]
+    >[!INCLUDE [Pricing](~/reusable-content/ce-skilling/azure/includes/bastion-pricing.md)]
+
+1. Enter or select the following information in **Azure Bastion**:
+
+    | Setting | Value |
+    |---|---|
+    | Azure Bastion host name | Enter **bastion**. |
+    | Azure Bastion public IP address | Select **Create a public IP address**. </br> Enter **public-ip** in Name. </br> Select **OK**. |
+
+    :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/enable-bastion.png" alt-text="Screenshot of enable bastion host in Create virtual network in the Azure portal.":::
+
+1. Select **Next** to proceed to the **IP Addresses** tab.
+    
+1. In the address space box in **Subnets**, select the **default** subnet.
+
+1. In **Edit subnet**, enter or select the following information:
+
+    | Setting | Value |
+    |---|---|
+    | **Subnet details** |  |
+    | Subnet template | Leave the default **Default**. |
+    | Name | Enter **subnet-1**. |
+    | Starting address | Leave the default of **10.0.0.0**. |
+    | Subnet size | Leave the default of **/24(256 addresses)**. |
+
+    :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/address-subnet-space.png" alt-text="Screenshot of default subnet rename and configuration.":::
+
+1. Select **Save**.
+
+1. Select **Review + create** at the bottom of the screen, and when validation passes, select **Create**.
 
 ### Enable managed identity
 
