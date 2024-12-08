@@ -92,7 +92,7 @@ The following procedure creates a virtual network with a resource subnet, an Azu
     | Name | Enter **vnet-lab**. |
     | Region | Select **France Central**. |
 
-    :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/create-virtual-network-basics.png" alt-text="Screenshot of Basics tab of Create virtual network in the Azure portal." lightbox="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/create-virtual-network-basics.png":::
+![image](/media/use-your-data/creation_vnet.png)
 
 1. Select **Next** to proceed to the **Security** tab.
 
@@ -110,7 +110,7 @@ The following procedure creates a virtual network with a resource subnet, an Azu
     | Azure Bastion host name | Enter **bastion**. |
     | Azure Bastion public IP address | Select **Create a public IP address**. </br> Enter **public-ip** in Name. </br> Select **OK**. |
 
-    :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/enable-bastion.png" alt-text="Screenshot of enable bastion host in Create virtual network in the Azure portal.":::
+![image](/media/use-your-data/create_bastion.png)
 
 1. Select **Next** to proceed to the **IP Addresses** tab.
     
@@ -125,8 +125,6 @@ The following procedure creates a virtual network with a resource subnet, an Azu
     | Name | Enter **pe**. |
     | Starting address | Leave the default of **10.0.0.0**. |
     | Subnet size | Leave the default of **/24(256 addresses)**. |
-
-    :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/address-subnet-space.png" alt-text="Screenshot of default subnet rename and configuration.":::
 
 1. Select **Save**.
 
@@ -153,6 +151,10 @@ The following procedure creates a virtual network with a resource subnet, an Azu
     | Subnet size | Leave the default of **/27(32 addresses)**. |
 
 1. Select **Save**.
+
+1. Final subnets list
+
+![image](/media/use-your-data/vnet_subnet.png)
 
 1. Select **Review + create** at the bottom of the screen, and when validation passes, select **Create**.
 
@@ -203,12 +205,12 @@ You can use basic pricing tier and higher for the search resource. It's not nece
 
 To allow your other resources to recognize the Azure AI Search using Microsoft Entra ID authentication, you need to assign a managed identity for your Azure AI Search. The easiest way is to toggle on the system assigned managed identity in the Azure portal.
 
-:::image type="content" source="../media/use-your-data/outbound-managed-identity-ai-search.png" alt-text="A screenshot showing the managed identity setting for Azure AI Search in the Azure portal." lightbox="../media/use-your-data/outbound-managed-identity-ai-search.png":::
+:::image type="content" source="/media/use-your-data/outbound-managed-identity-ai-search.png" alt-text="A screenshot showing the managed identity setting for Azure AI Search in the Azure portal." lightbox="/media/use-your-data/outbound-managed-identity-ai-search.png":::
 
 ### Enable role-based access control
 As Azure OpenAI uses managed identity to access Azure AI Search, you need to enable role-based access control in your Azure AI Search. To do it on Azure portal, select **Both** or **Role-based access control** in the **Keys** tab in the Azure portal.
 
-:::image type="content" source="../media/use-your-data/managed-identity-ai-search.png" alt-text="A screenshot showing the managed identity option for Azure AI search in the Azure portal." lightbox="../media/use-your-data/managed-identity-ai-search.png":::
+:::image type="content" source="/media/use-your-data/managed-identity-ai-search.png" alt-text="A screenshot showing the managed identity option for Azure AI search in the Azure portal." lightbox="/media/use-your-data/managed-identity-ai-search.png":::
 
 For more information, see the [Azure AI Search RBAC article](/azure/search/search-security-enable-roles).
 
@@ -225,7 +227,7 @@ You can enable trusted service of your search resource from Azure portal.
 
 Go to your search resource's network tab. With the public network access set to **disabled**, select **Allow Azure services on the trusted services list to access this search service.**
 
-:::image type="content" source="../media/use-your-data/search-trusted-service.png" alt-text="A diagram showing the search trusted service." lightbox="../media/use-your-data/search-trusted-service.png":::
+:::image type="content" source="/media/use-your-data/search-trusted-service.png" alt-text="A diagram showing the search trusted service." lightbox="/media/use-your-data/search-trusted-service.png":::
 
 You can also use the REST API to enable trusted service. This example uses the Azure CLI and the `jq` tool.
 
