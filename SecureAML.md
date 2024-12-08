@@ -105,7 +105,7 @@ Before following the steps in this article, make sure you have the following pre
     
     4. Check the **Provision Managed Network (Preview)**
        
-    5. Add an _outbound rule_ for the Azure OpenAI ressrouce, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
+    5. Add an _outbound rule_ for the Azure OpenAI ressource, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
     
         * __Rule name__: A name for the rule. The name must be unique for this workspace.
         * __Destination type__: Private Endpoint
@@ -119,10 +119,22 @@ Before following the steps in this article, make sure you have the following pre
         * __Sub Resource__: The sub resource of the Azure resource type. **account**
 
         ![image](/media/how-to-managed-network/outbound_aoai_rule.png)
+       
+  5. Add 2 _outbound rule_ for the pypi.org repository, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
+    
+        The destination type is __FQDN__, provide the following information:
 
-    6. Select **__Save__** to save the rule. You can continue using __Add user-defined outbound rules__ to add rules.
+        * __Rule Name__: Name of the rule, pypi
+        * __FQDN destination__: pypi.org
 
-    7. Continue creating the workspace as normal.
+        The destination type is __FQDN__, provide the following information:
+
+        * __Rule Name__: Name of the rule, pypifiles
+        * __FQDN destination__: files.pythonhosted.org
+        
+    7. Select **__Save__** to save the rules. You can continue using __Add user-defined outbound rules__ to add rules.
+
+    8. Continue creating the workspace as normal.
 
 > [!TIP]
 > Azure Machine Learning managed VNet doesn't support creating a private endpoint to all Azure resource types. For a list of supported resources, see the [Private endpoints](#private-endpoints)  section.
@@ -165,5 +177,10 @@ To be able to use a Notebook and execute some code, you need to create a compute
 4. Apply the Role
 
 ## Let's execute some code
+
+1. Execute the first cell to import python package
+2. Replace the **endpoint** value with your own Azure OpenAI endpoint
+3. If needed, adapt the deployment name too
+4. Execute the second cell to maka a call to openai
 
 
