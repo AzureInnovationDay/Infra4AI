@@ -108,16 +108,15 @@ Before following the steps in this article, make sure you have the following pre
     5. Add an _outbound rule_ for the Azure OpenAI ressrouce, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
     
         * __Rule name__: A name for the rule. The name must be unique for this workspace.
-        * __Destination type__: Private Endpoint, Service Tag, or FQDN. Service Tag and FQDN are only available when the network isolation is private with approved outbound.
+        * __Destination type__: Private Endpoint
 
         The destination type is __Private Endpoint__, provide the following information:
 
         * __Subscription__: The subscription that contains the Azure resource you want to add a private endpoint for.
         * __Resource group__: The resource group that contains the Azure resource you want to add a private endpoint for.
-        * __Resource type__: The type of the Azure resource.
-        * __Resource name__: The name of the Azure resource.
-        * __Sub Resource__: The sub resource of the Azure resource type.
-
+        * __Resource type__: The type of the Azure resource. **Microsoft.CognitiveServices/accounts**
+        * __Resource name__: The name of the Azure resource. **Your Azure OpenAI ressource**
+        * __Sub Resource__: The sub resource of the Azure resource type. **account**
 
         ![image](/media/how-to-managed-network/outbound_aoai_rule.png)
 
@@ -142,5 +141,29 @@ Disable Public Access for the **Storage Account and the Key Vault**.
 
 ## Create a compute instance
 
-To be able to use a Notebook and execute some code, you need to create a compute instance in the managed VNet
+To be able to use a Notebook and execute some code, you need to create a compute instance in the managed VNet.
+
+1. Create a compute, set a **Name** and choose an **SKU**
+![image](/media/how-to-managed-network/create_compute_sku.png)
+
+2. Set the **Security** parameters as shown
+![image](/media/how-to-managed-network/create_compute_security.png)
+
+3. For the **Applications** and **Tags** category, let the default parameters
+4. Select **Review and Create** and **Create**
+
+## Upload a Notebook file
+
+1. In the notebook section, choose (+) to upload a notebook file
+2. Choose the *demo.ipynb* file in the **samples** directoty of this repo
+
+## Give permission to your compute instance to use your Azure OpenAI ressource
+
+1. On the Azure OpenAi ressources, give the Role **Cognitive Service OpenAI User**
+2. Select a user,group,service principal
+3. Search with this pattern [*aml-workspace-name*]/compute/[*compute-vm-name*]
+4. Apply the Role
+
+## Let's execute some code
+
 
