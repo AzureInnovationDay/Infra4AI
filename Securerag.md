@@ -375,13 +375,13 @@ Before adding a data source in the OpenAI studio, you need to create a blob cont
 
 2. Upload the sample files from the **documents** folder in this repository
 
-2 in Azure AI Studio, add a Datasource un the **Chat** Section
+3 in Azure AI Studio, add a Datasource un the **Chat** Section
 
 ![image](/media/use-your-data/aoai_chat.png)
 
-3. Use **+Add a datasource**
+4. Use **+Add a datasource**
    
-4. Set the Datasource
+5. Set the Datasource
 
     | Setting | Value |
     |---|---|
@@ -399,28 +399,40 @@ Before adding a data source in the OpenAI studio, you need to create a blob cont
 
 ![image](/media/use-your-data/aoai_add_datasource.png)
 
-5. Choose **Next** and leave as default for **Data management**
+6. Choose **Next** and leave as default for **Data management**
 
-6. Choose **Next** and leave as default for **Data connection**
+7. Choose **Next** and leave as default for **Data connection**
 
-7. **Save and Create**
+8. **Save and Create**
 
-The indexing process will start. When it is finished, try to ask a quesiton about the documents in the Chat windows.
+The indexing process will start. When it is finished, try to ask a question about the documents in the Chat windows.
+
+For eg : "What is the contoso mission" ?
 
 ## Web app
-The web app communicates with your Azure OpenAI resource. Since your Azure OpenAI resource has public network disabled, the web app needs to be set up to use the private endpoint in your virtual network to access your Azure OpenAI resource.
 
-The web app needs to resolve your Azure OpenAI host name to the private IP of the private endpoint for Azure OpenAI. So, you need to configure the private DNS zone for your virtual network first.
+Deploy the web app from the Azure OpenAI studio directly
 
-1. [Create private DNS zone](/azure/dns/private-dns-getstarted-portal#create-a-private-dns-zone) in your resource group. 
-1. [Add a DNS record](/azure/dns/private-dns-getstarted-portal#create-an-additional-dns-record). The IP is the private IP of the private endpoint for your Azure OpenAI resource, and you can get the IP address from the network interface associated with the private endpoint for your Azure OpenAI.
-1. [Link the private DNS zone to your virtual network](/azure/dns/private-dns-getstarted-portal#link-the-virtual-network) so the web app integrated in this virtual network can use this private DNS zone.
+![image](/media/use-your-data/deploy_webapp.png)
 
-When deploying the web app from Azure OpenAI Studio, select the same location with the virtual network, and select a proper SKU, so it can support the [virtual network integration feature](/azure/app-service/overview-vnet-integration). 
+Choose **B2 SKU** and adjust the **Name** if it is not available
 
-After the web app is deployed, from the Azure portal networking tab, configure the web app outbound traffic virtual network integration, choose the third subnet that you reserved for web app.
+After the deployment, some modifications need to be made :
 
-:::image type="content" source="../media/use-your-data/web-app-configure-outbound-traffic.png" alt-text="A screenshot showing outbound traffic configuration for the web app." lightbox="../media/use-your-data/web-app-configure-outbound-traffic.png":::
+![image](/media/use-your-data/app_network_status.png)
+
+1. Disable **public access**
+
+![image](/media/use-your-data/app_disable_public_access.png)
+
+3. Create a private endpoint to access to the Web App
+
+4. Inject the Web App in your VNet
+
+![image](/media/use-your-data/app_vnet_integration.png)
+![image](/media/use-your-data/app_vnet_status.png)
+
+After a while, you can access to the Web App in a private way from your jumphost (adjust **myappname**): use **http://myappname.azurewebsites.net**
 
 ## Using the API
 
