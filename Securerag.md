@@ -433,23 +433,3 @@ After the deployment, some modifications need to be made :
 ![image](/media/use-your-data/app_vnet_status.png)
 
 After a while, you can access to the Web App in a private way from your jumphost (adjust **myappname**): use **http://myappname.azurewebsites.net**
-
-## Using the API
-
-Make sure your sign-in credential has `Cognitive Services OpenAI Contributor` role on your Azure OpenAI resource, and run `az login` first.
-
-:::image type="content" source="../media/use-your-data/api-local-test-setup-credential.png" alt-text="A screenshot showing the cognitive services OpenAI contributor role in the Azure portal." lightbox="../media/use-your-data/api-local-test-setup-credential.png":::
-
-### Ingestion API
-
-See the [ingestion API reference article](/rest/api/azureopenai/ingestion-jobs?context=/azure/ai-services/openai/context/context) for details on the request and response objects used by the ingestion API.
-
-### Inference API
-
-See the [inference API reference article](../references/on-your-data.md) for details on the request and response objects used by the inference API.
-    
-## Use Microsoft Defender for Cloud
-
-You can now integrate [Microsoft Defender for Cloud](/azure/defender-for-cloud/defender-for-cloud-introduction) (preview) with your Azure resources to protect your applications. Microsoft Defender for Cloud protects your applications with [threat protection for AI workloads](/azure/defender-for-cloud/ai-threat-protection) , providing teams with evidence-based security alerts enriched with Microsoft threat intelligence signals and enables teams to strengthen their [security posture](/azure/defender-for-cloud/ai-security-posture) with integrated security best-practice recommendations.
-
-Use [this form](https://forms.office.com/pages/responsepage.aspx?id=v4j5cvGGr0GRqy180BHbR9EXzLewuFRArQPJzR1tntlURThQR0hYU1MyRVRNODNMV1hBOUEzVlk3NC4u) to apply for access.
