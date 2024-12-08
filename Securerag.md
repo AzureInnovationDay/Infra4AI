@@ -158,6 +158,10 @@ The following procedure creates a virtual network with a resource subnet, an Azu
 
 ## Configure Azure OpenAI
 
+### Use Sweden Central
+
+During creation of Azure OpenAI resource, choose **Sweden Cental**
+
 ### Enable managed identity
 
 To allow your Azure AI Search and Storage Account to recognize your Azure OpenAI Service via Microsoft Entra ID authentication, you need to assign a managed identity for your Azure OpenAI Service. The easiest way is to toggle on system assigned managed identity on Azure portal.
@@ -191,7 +195,7 @@ Set `networkAcls.bypass` as `AzureServices` from the management API. For more in
 
 You can disable public network access of your Azure OpenAI resource in the Azure portal. 
 
-To allow access to your Azure OpenAI Service from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#use-private-endpoints) that connect to your Azure OpenAI resource. Thsi private endpoint will be used by the WebApp, so **it has to be created**.
+To allow access to your Azure OpenAI Service from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#use-private-endpoints) that connect to your Azure OpenAI resource. Thsi private endpoint will be used by the WebApp, so **it has to be created in France Central**.
 
 
 ## Configure Azure AI Search
@@ -324,7 +328,7 @@ To access the Azure OpenAI Service from your on-premises client machines, one of
 
 3. Select **Next: Networking**
 
-     | Setting | Value |
+    | Setting | Value |
     |---|---|
     | **Network Interface** |  |
     | Virtual Network | **vnet-lab** |
@@ -348,6 +352,60 @@ To access the Azure OpenAI Service from your on-premises client machines, one of
 ## Azure OpenAI Studio
 
 You should be able to use all Azure OpenAI Studio features, including both ingestion and inference, from your on-premises client machines.
+
+## Deploy the 2 models
+
+You will need to deploy 2 models in Sweden Central
+ - gpt-4o-mini
+ - text-embedding-ada-002
+
+1. Deploy the gpt-4o model with those parameters
+
+![image](/media/use-your-data/model_gpt4o.png)
+
+2. Deploy the text embedding ada 002 model with those parameters
+
+![image](/media/use-your-data/model_ada002.png)
+
+## Add a Datasource to OpenAI
+
+Before adding a data source in the OpenAI studio, you need to create a blob container in you storage account.
+
+1. Go to your storage account and create a container named **documents**
+
+2. Upload the sample files from the **documents** folder in this repository
+
+2 in Azure AI Studio, add a Datasource un the **Chat** Section
+
+![image](/media/use-your-data/aoai_chat.png)
+
+3. Use **+Add a datasource**
+   
+4. Set the Datasource
+
+    | Setting | Value |
+    |---|---|
+    | **Select Datasource** |  |
+    | Type | **Azure Blob Storage (preview)** |
+    | Select Azure Blob storage resource | **your storage account** |
+    | Select Storage account container | **documents** |
+    | Select Storage Azure AI Search | **your azure ai search resource** |
+    | Enter the index name | **mydocuments** |
+    | Indexer schedule | **Once** |
+    | Add vector search to this search resource | **Checked** |
+    | Indexer schedule | **Once** |
+    | **Embedding model** |  |
+    | Select and embedding model | **Azure OpenAI - text-embedding-ada-002** |
+
+![image](/media/use-your-data/aoai_add_datasource.png)
+
+5. Choose **Next** and leave as default for **Data management**
+
+6. Choose **Next** and leave as default for **Data connection**
+
+7. **Save and Create**
+
+The indexing process will start. When it is finished, try to ask a quesiton about the documents in the Chat windows.
 
 ## Web app
 The web app communicates with your Azure OpenAI resource. Since your Azure OpenAI resource has public network disabled, the web app needs to be set up to use the private endpoint in your virtual network to access your Azure OpenAI resource.
