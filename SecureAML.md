@@ -147,6 +147,8 @@ You need to create Private Endpoint for :
 - Azure File Store
 - Azure Key Vault
 
+Use the **pe** subnet dedicated in your VNet.
+
 Disable Public Access for the **Storage Account and the Key Vault**.
 
 ## Create a compute instance
