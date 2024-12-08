@@ -178,6 +178,8 @@ To be able to use a Notebook and execute some code, you need to create a compute
 
 ## Let's execute some code
 
+![image](/media/how-to-managed-network/notebook_run.png)
+
 1. Execute the first cell to import python package
 2. Replace the **endpoint** value with your own Azure OpenAI endpoint
 3. If needed, adapt the deployment name too
