@@ -48,33 +48,34 @@ The resources in the resource group include but are not limited to:
 * Three key services: one Azure OpenAI, one Azure AI Search, one Storage Account
 * Three Private endpoints, each is linked to one key service
 * Three Network interfaces, each is associated with one private endpoint
-* One Virtual network gateway, for the access from on-premises client machines
+* One Azure Bastion, for the access from on-premises client machines through a Jumphost
+* A jumphost VM to access privately to your key services and Web App
 * One Web App with virtual network integrated
-* One Private DNS zone, so the Web App finds the IP of your Azure OpenAI
+* Multiple Private DNS zone, so the Web App finds the IP of your Azure OpenAI, and you can connect from a jumphost VM to your Cognitive Services
 
 ## Create virtual network
 
 The virtual network has four subnets. 
 
-1.
 1. The first subnet is used for the virtual machine.
 1. The second subnet is used for the private endpoints for the three key services.
 1. The third subnet is empty, and used for Web App outbound virtual network integration.
+2. The fourth subnet is the Bastion Subnet
 
 In this lab, when asked to create a virtual network
 
-- choose the existing resource group
-- name it "vnet-lab-contoso"
+- Choose the existing resource group
+- Name it "vnet-lab"
 - Choose "France Central" as location
-- Add three  Subnets:
-    - one called "Subnet-2", dedicated to the private endpoints, using the 10.0.1.0/24 prefix
-    - a second one called 
-
-You can use the 
-
+- Add Four Subnets:
+    - "pe" : dedicated to the private endpoints, using the 10.0.0.0/24 prefix
+    - "AzureBastionSubnet" : dedicated to the Bastion using the 10.0.1.0/26 prefix
+    - "appservice" : dedicated to the Web app Service using the 10.0.2.0/24 prefix
+    - "vms" : dedicated to the jumphost VM using the 10.0.1.64/27 prefix
+    
 To create a virtual network, you can refer to this documentation : https://learn.microsoft.com/en-us/azure/virtual-network/quick-create-portal.
 
-he following procedure creates a virtual network with a resource subnet, an Azure Bastion subnet, and an Azure Bastion host.
+The following procedure creates a virtual network with a resource subnet, an Azure Bastion subnet, and an Azure Bastion host.
 
 1. In the portal, search for and select **Virtual networks**.
 
@@ -86,10 +87,10 @@ he following procedure creates a virtual network with a resource subnet, an Azur
     |---|---|
     | **Project details** |  |
     | Subscription | Select your subscription. |
-    | Resource group | Select **Create new**. </br> Enter **test-rg** in Name. </br> Select **OK**. |
+    | Resource group | Select **your existing resource group**. </br> Select **OK**. |
     | **Instance details** |  |
-    | Name | Enter **vnet-1**. |
-    | Region | Select **East US 2**. |
+    | Name | Enter **vnet-lab**. |
+    | Region | Select **France Central**. |
 
     :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/create-virtual-network-basics.png" alt-text="Screenshot of Basics tab of Create virtual network in the Azure portal." lightbox="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/create-virtual-network-basics.png":::
 
@@ -121,11 +122,35 @@ he following procedure creates a virtual network with a resource subnet, an Azur
     |---|---|
     | **Subnet details** |  |
     | Subnet template | Leave the default **Default**. |
-    | Name | Enter **subnet-1**. |
+    | Name | Enter **pe**. |
     | Starting address | Leave the default of **10.0.0.0**. |
     | Subnet size | Leave the default of **/24(256 addresses)**. |
 
     :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/address-subnet-space.png" alt-text="Screenshot of default subnet rename and configuration.":::
+
+1. Select **Save**.
+
+1. Add the Web App Subnet, select **+Add a subnet**
+
+    | Setting | Value |
+    |---|---|
+    | **Subnet details** |  |
+    | Subnet template | Leave the default **Default**. |
+    | Name | Enter **appservices**. |
+    | Starting address | Leave the default of **10.0.2.0**. |
+    | Subnet size | Leave the default of **/24(256 addresses)**. |
+
+1. Select **Save**.
+
+1. Add the VMs Subnet, select **+Add a subnet**
+
+    | Setting | Value |
+    |---|---|
+    | **Subnet details** |  |
+    | Subnet template | Leave the default **Default**. |
+    | Name | Enter **vms**. |
+    | Starting address | Leave the default of **10.0.1.64**. |
+    | Subnet size | Leave the default of **/27(32 addresses)**. |
 
 1. Select **Save**.
 
