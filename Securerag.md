@@ -373,7 +373,7 @@ Before adding a data source in the OpenAI studio, you need to create a blob cont
 
 1. Go to your storage account and create a container named **documents**
 
-2. Upload the sample files from the **documents** folder in this repository
+2. Upload the sample files from the **documents** folder in this repository to the **documents** container (the 3 PDF files) 
 
 3 in Azure AI Studio, add a Datasource un the **Chat** Section
 
