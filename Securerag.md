@@ -48,95 +48,125 @@ The resources in the resource group include but are not limited to:
 * Three key services: one Azure OpenAI, one Azure AI Search, one Storage Account
 * Three Private endpoints, each is linked to one key service
 * Three Network interfaces, each is associated with one private endpoint
-* One Virtual network gateway, for the access from on-premises client machines
+* One Azure Bastion, for the access from on-premises client machines through a Jumphost
+* A jumphost VM to access privately to your key services and Web App
 * One Web App with virtual network integrated
-* One Private DNS zone, so the Web App finds the IP of your Azure OpenAI
+* Multiple Private DNS zone, so the Web App finds the IP of your Azure OpenAI, and you can connect from a jumphost VM to your Cognitive Services
 
 ## Create virtual network
 
 The virtual network has four subnets. 
 
-1.
 1. The first subnet is used for the virtual machine.
-1. The second subnet is used for the private endpoints for the three key services.
-1. The third subnet is empty, and used for Web App outbound virtual network integration.
+2. The second subnet is used for the private endpoints for the three key services.
+3. The third subnet is empty, and used for Web App outbound virtual network integration.
+4. The fourth subnet is the Bastion Subnet
 
 In this lab, when asked to create a virtual network
 
-- choose the existing resource group
-- name it "vnet-lab-contoso"
+- Choose the existing resource group
+- Name it "vnet-lab"
 - Choose "France Central" as location
-- Add three  Subnets:
-    - one called "Subnet-2", dedicated to the private endpoints, using the 10.0.1.0/24 prefix
-    - a second one called 
-
-You can use the 
-
+- Add Four Subnets:
+    - "pe" : dedicated to the private endpoints, using the 10.0.0.0/24 prefix
+    - "AzureBastionSubnet" : dedicated to the Bastion using the 10.0.1.0/26 prefix
+    - "appservice" : dedicated to the Web app Service using the 10.0.2.0/24 prefix
+    - "vms" : dedicated to the jumphost VM using the 10.0.1.64/27 prefix
+    
 To create a virtual network, you can refer to this documentation : https://learn.microsoft.com/en-us/azure/virtual-network/quick-create-portal.
 
-he following procedure creates a virtual network with a resource subnet, an Azure Bastion subnet, and an Azure Bastion host.
+The following procedure creates a virtual network with a resource subnet, an Azure Bastion subnet, and an Azure Bastion host.
 
 1. In the portal, search for and select **Virtual networks**.
 
-1. On the **Virtual networks** page, select **+ Create**.
+2. On the **Virtual networks** page, select **+ Create**.
 
-1. On the **Basics** tab of **Create virtual network**, enter or select the following information:
+3. On the **Basics** tab of **Create virtual network**, enter or select the following information:
 
     | Setting | Value |
     |---|---|
     | **Project details** |  |
     | Subscription | Select your subscription. |
-    | Resource group | Select **Create new**. </br> Enter **test-rg** in Name. </br> Select **OK**. |
+    | Resource group | Select **your existing resource group**. </br> Select **OK**. |
     | **Instance details** |  |
-    | Name | Enter **vnet-1**. |
-    | Region | Select **East US 2**. |
+    | Name | Enter **vnet-lab**. |
+    | Region | Select **France Central**. |
 
-    :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/create-virtual-network-basics.png" alt-text="Screenshot of Basics tab of Create virtual network in the Azure portal." lightbox="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/create-virtual-network-basics.png":::
+![image](/media/use-your-data/creation_vnet.png)
 
-1. Select **Next** to proceed to the **Security** tab.
+4. Select **Next** to proceed to the **Security** tab.
 
-1. Select **Enable Bastion** in the **Azure Bastion** section of the **Security** tab.
+5. Select **Enable Bastion** in the **Azure Bastion** section of the **Security** tab.
 
     Azure Bastion uses your browser to connect to VMs in your virtual network over secure shell (SSH) or remote desktop protocol (RDP) by using their private IP addresses. The VMs don't need public IP addresses, client software, or special configuration. For more information about Azure Bastion, see [Azure Bastion](../articles/bastion/bastion-overview.md)
 
     >[!NOTE]
     >[!INCLUDE [Pricing](~/reusable-content/ce-skilling/azure/includes/bastion-pricing.md)]
 
-1. Enter or select the following information in **Azure Bastion**:
+6. Enter or select the following information in **Azure Bastion**:
 
     | Setting | Value |
     |---|---|
     | Azure Bastion host name | Enter **bastion**. |
     | Azure Bastion public IP address | Select **Create a public IP address**. </br> Enter **public-ip** in Name. </br> Select **OK**. |
 
-    :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/enable-bastion.png" alt-text="Screenshot of enable bastion host in Create virtual network in the Azure portal.":::
+![image](/media/use-your-data/create_bastion.png)
 
-1. Select **Next** to proceed to the **IP Addresses** tab.
+7. Select **Next** to proceed to the **IP Addresses** tab.
     
-1. In the address space box in **Subnets**, select the **default** subnet.
+8. In the address space box in **Subnets**, select the **default** subnet.
 
-1. In **Edit subnet**, enter or select the following information:
+9. In **Edit subnet**, enter or select the following information:
 
     | Setting | Value |
     |---|---|
     | **Subnet details** |  |
     | Subnet template | Leave the default **Default**. |
-    | Name | Enter **subnet-1**. |
+    | Name | Enter **pe**. |
     | Starting address | Leave the default of **10.0.0.0**. |
     | Subnet size | Leave the default of **/24(256 addresses)**. |
 
-    :::image type="content" source="~/reusable-content/ce-skilling/azure/includes/media/virtual-network-create-with-bastion/address-subnet-space.png" alt-text="Screenshot of default subnet rename and configuration.":::
+10. Select **Save**.
 
-1. Select **Save**.
+11. Add the Web App Subnet, select **+Add a subnet**
 
-1. Select **Review + create** at the bottom of the screen, and when validation passes, select **Create**.
+    | Setting | Value |
+    |---|---|
+    | **Subnet details** |  |
+    | Subnet template | Leave the default **Default**. |
+    | Name | Enter **appservices**. |
+    | Starting address | Leave the default of **10.0.2.0**. |
+    | Subnet size | Leave the default of **/24(256 addresses)**. |
+
+12. Select **Save**.
+
+13. Add the VMs Subnet, select **+Add a subnet**
+
+    | Setting | Value |
+    |---|---|
+    | **Subnet details** |  |
+    | Subnet template | Leave the default **Default**. |
+    | Name | Enter **vms**. |
+    | Starting address | Leave the default of **10.0.1.64**. |
+    | Subnet size | Leave the default of **/27(32 addresses)**. |
+
+14. Select **Save**.
+
+![image](/media/use-your-data/vnet_subnet.png)
+
+15. Select **Review + create** at the bottom of the screen, and when validation passes, select **Create**.
 
 ## Configure Azure OpenAI
+
+### Use Sweden Central
+
+During creation of Azure OpenAI resource, choose **Sweden Cental**
 
 ### Enable managed identity
 
 To allow your Azure AI Search and Storage Account to recognize your Azure OpenAI Service via Microsoft Entra ID authentication, you need to assign a managed identity for your Azure OpenAI Service. The easiest way is to toggle on system assigned managed identity on Azure portal.
-:::image type="content" source="../media/use-your-data/openai-managed-identity.png" alt-text="A screenshot showing the system assigned managed identity option in the Azure portal." lightbox="../media/use-your-data/openai-managed-identity.png":::
+
+![image](/media/use-your-data/openai-managed-identity.png)
 
 To set the managed identities via the management API, see [the management API reference documentation](/rest/api/aiservices/accountmanagement/accounts/update#identity).
 
@@ -160,13 +190,12 @@ To allow your Azure AI Search to call your Azure OpenAI `preprocessing-jobs` as 
 
 Set `networkAcls.bypass` as `AzureServices` from the management API. For more information, see [Virtual networks article](/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#grant-access-to-trusted-azure-services-for-azure-openai).
 
-This step can be skipped only if you have a [shared private link](#create-shared-private-link) for your Azure AI Search resource.
 
 ### Disable public network access
 
 You can disable public network access of your Azure OpenAI resource in the Azure portal. 
 
-To allow access to your Azure OpenAI Service from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#use-private-endpoints) that connect to your Azure OpenAI resource.
+To allow access to your Azure OpenAI Service from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#use-private-endpoints) that connect to your Azure OpenAI resource. Thsi private endpoint will be used by the WebApp, so **it has to be created in France Central**.
 
 
 ## Configure Azure AI Search
@@ -177,12 +206,12 @@ You can use basic pricing tier and higher for the search resource. It's not nece
 
 To allow your other resources to recognize the Azure AI Search using Microsoft Entra ID authentication, you need to assign a managed identity for your Azure AI Search. The easiest way is to toggle on the system assigned managed identity in the Azure portal.
 
-:::image type="content" source="../media/use-your-data/outbound-managed-identity-ai-search.png" alt-text="A screenshot showing the managed identity setting for Azure AI Search in the Azure portal." lightbox="../media/use-your-data/outbound-managed-identity-ai-search.png":::
+![image](/media/use-your-data/outbound-managed-identity-ai-search.png)
 
 ### Enable role-based access control
 As Azure OpenAI uses managed identity to access Azure AI Search, you need to enable role-based access control in your Azure AI Search. To do it on Azure portal, select **Both** or **Role-based access control** in the **Keys** tab in the Azure portal.
 
-:::image type="content" source="../media/use-your-data/managed-identity-ai-search.png" alt-text="A screenshot showing the managed identity option for Azure AI search in the Azure portal." lightbox="../media/use-your-data/managed-identity-ai-search.png":::
+![image](/media/use-your-data/managed-identity-ai-search.png)
 
 For more information, see the [Azure AI Search RBAC article](/azure/search/search-security-enable-roles).
 
@@ -199,7 +228,7 @@ You can enable trusted service of your search resource from Azure portal.
 
 Go to your search resource's network tab. With the public network access set to **disabled**, select **Allow Azure services on the trusted services list to access this search service.**
 
-:::image type="content" source="../media/use-your-data/search-trusted-service.png" alt-text="A diagram showing the search trusted service." lightbox="../media/use-your-data/search-trusted-service.png":::
+![image](/media/use-your-data/search-trusted-service.png)
 
 You can also use the REST API to enable trusted service. This example uses the Azure CLI and the `jq` tool.
 
@@ -219,19 +248,6 @@ az rest --uri "https://management.azure.com$rid?api-version=$apiVersion" \
 
 ```
 
-### Create shared private link
-
-> [!TIP]
-> If you are using a basic or standard pricing tier, or if it is your first time to setup all of your resources securely, you should skip this advanced topic.
-
-This section is only applicable for S2 pricing tier search resource, because it requires [private endpoint support for indexers with a skill set](/azure/search/search-limits-quotas-capacity#shared-private-link-resource-limits).
-
-To create shared private link from your search resource connecting to your Azure OpenAI resource, see the [search documentation](/azure/search/search-indexer-howto-access-private). Select **Resource type** as `Microsoft.CognitiveServices/accounts` and **Group ID** as `openai_account`.
-
-With shared the private link, [step 8](#data-ingestion-architecture) of the data ingestion architecture diagram is changed from **bypass trusted service** to **shared private link**.
-
-:::image type="content" source="../media/use-your-data/ingestion-architecture-s2.png" alt-text="A diagram showing the process of ingesting data with an S2 search resource." lightbox="../media/use-your-data/ingestion-architecture-s2.png":::
-
 ## Configure Storage Account
 
 ### Enable trusted service
@@ -245,8 +261,6 @@ In the Azure portal, navigate to your storage account networking tab, choose "Se
 You can disable public network access of your Storage Account in the Azure portal. 
 
 To allow access to your Storage Account from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/storage/common/storage-private-endpoints) that connect to your blob storage.
-
-
 
 ## Role assignments
 
@@ -280,59 +294,142 @@ To enable the developers to use these resources to build applications, the admin
 | `Contributor` | The resource group or Azure subscription where the developer need to deploy the web app to | Deploy web app to the developer's Azure subscription.|
 | `Role Based Access Control Administrator` | Azure OpenAI | Permission to configure the necessary role assignment on the Azure OpenAI resource. Enables the web app to call Azure OpenAI. |
 
-## Configure gateway and client
+## Configure the jumphost VM
 
-To access the Azure OpenAI Service from your on-premises client machines, one of the approaches is to configure Azure VPN Gateway and Azure VPN Client.
+To access the Azure OpenAI Service from your on-premises client machines, one of the approaches is to use a Jump host VM with a Bastion.
 
-Follow [this guideline](/azure/vpn-gateway/tutorial-create-gateway-portal#VNetGateway) to create virtual network gateway for your virtual network.
+1. Create a new VM :
 
-Follow [this guideline](/azure/vpn-gateway/openvpn-azure-ad-tenant#enable-authentication) to add point-to-site configuration, and enable Microsoft Entra ID based authentication. Download the Azure VPN Client profile configuration package, unzip, and import the `AzureVPN/azurevpnconfig.xml` file to your Azure VPN client.
+    | Setting | Value |
+    |---|---|
+    | **Project details** |  |
+    | Resource Group | **Your actual resource group** |
+    | **Instance details** |  |
+    | Virtual Machine Name | **jumphost**. |
+    | Region | **France Central**. |
+    | Availability Options | **No Infrastructure redundancy required**. |
+    | Image | **Windows 10 Pro, version 22H2, x64 Gen2**. |
+    | Region | **France Central**. |
+    | Size | **Standard D2s_v3**. |
+    | **Administrator Account** |  |
+    | Username | **adminuser**. |
+    | Password | **Choose one**. |
+    | Confirm Password | **Choose one**. |
+    | **Inbound port rules** |  |
+    | Public Inbound Port | **None**. |
+    | **Lincensing** |  |
+    | Confirm licensing | **Check**. |
 
-:::image type="content" source="../media/use-your-data/vpn-client.png" alt-text="A screenshot showing where to import Azure VPN Client profile." lightbox="../media/use-your-data/vpn-client.png":::
+![image](/media/use-your-data/create_vm.png)
+     
+2. Select **Next: Disks** and leave everything as default
 
-Configure your local machine `hosts` file to point your resources host names to the private IPs in your virtual network. The `hosts` file is located at `C:\Windows\System32\drivers\etc` for Windows, and at `/etc/hosts` on Linux. Example:
+![image](/media/use-your-data/vm_disks.png)
 
-```
-10.0.0.5 contoso.openai.azure.com
-10.0.0.6 contoso.search.windows.net
-10.0.0.7 contoso.blob.core.windows.net
-```
+3. Select **Next: Networking**
+
+    | Setting | Value |
+    |---|---|
+    | **Network Interface** |  |
+    | Virtual Network | **vnet-lab** |
+    | Subnet | **vms** |
+    | Public IP | **None** |
+   
+![image](/media/use-your-data/vm_network.png)
+
+4. Select **Review + Create** and **Create** after validation
+
+## Connect to the Jumphost VM
+
+1. Select your VM and go to **Bastion** section
+
+![image](/media/use-your-data/bastion_connect.png)
+ 
+2. Use the **Username** and **Password** used during VM creation to login into the VM in RDP
+   
+3. In the VM connet to the azure portal with the login/password of your Azure Pass
 
 ## Azure OpenAI Studio
 
 You should be able to use all Azure OpenAI Studio features, including both ingestion and inference, from your on-premises client machines.
 
+## Deploy the 2 models
+
+You will need to deploy 2 models in Sweden Central
+ - gpt-4o-mini
+ - text-embedding-ada-002
+
+1. Deploy the gpt-4o model with those parameters
+
+![image](/media/use-your-data/model_gpt4o.png)
+
+2. Deploy the text embedding ada 002 model with those parameters
+
+![image](/media/use-your-data/model_ada002.png)
+
+## Add a Datasource to OpenAI
+
+Before adding a data source in the OpenAI studio, you need to create a blob container in you storage account.
+
+1. Go to your storage account and create a container named **documents**
+
+2. Upload the sample files from the **documents** folder in this repository
+
+3 in Azure AI Studio, add a Datasource un the **Chat** Section
+
+![image](/media/use-your-data/aoai_chat.png)
+
+4. Use **+Add a datasource**
+   
+5. Set the Datasource
+
+    | Setting | Value |
+    |---|---|
+    | **Select Datasource** |  |
+    | Type | **Azure Blob Storage (preview)** |
+    | Select Azure Blob storage resource | **your storage account** |
+    | Select Storage account container | **documents** |
+    | Select Storage Azure AI Search | **your azure ai search resource** |
+    | Enter the index name | **mydocuments** |
+    | Indexer schedule | **Once** |
+    | Add vector search to this search resource | **Checked** |
+    | Indexer schedule | **Once** |
+    | **Embedding model** |  |
+    | Select and embedding model | **Azure OpenAI - text-embedding-ada-002** |
+
+![image](/media/use-your-data/aoai_add_datasource.png)
+
+6. Choose **Next** and leave as default for **Data management**
+
+7. Choose **Next** and leave as default for **Data connection**
+
+8. **Save and Create**
+
+The indexing process will start. When it is finished, try to ask a question about the documents in the Chat windows.
+
+For eg : "What is the contoso mission" ?
+
 ## Web app
-The web app communicates with your Azure OpenAI resource. Since your Azure OpenAI resource has public network disabled, the web app needs to be set up to use the private endpoint in your virtual network to access your Azure OpenAI resource.
 
-The web app needs to resolve your Azure OpenAI host name to the private IP of the private endpoint for Azure OpenAI. So, you need to configure the private DNS zone for your virtual network first.
+Deploy the web app from the Azure OpenAI studio directly
 
-1. [Create private DNS zone](/azure/dns/private-dns-getstarted-portal#create-a-private-dns-zone) in your resource group. 
-1. [Add a DNS record](/azure/dns/private-dns-getstarted-portal#create-an-additional-dns-record). The IP is the private IP of the private endpoint for your Azure OpenAI resource, and you can get the IP address from the network interface associated with the private endpoint for your Azure OpenAI.
-1. [Link the private DNS zone to your virtual network](/azure/dns/private-dns-getstarted-portal#link-the-virtual-network) so the web app integrated in this virtual network can use this private DNS zone.
+![image](/media/use-your-data/deploy_webapp.png)
 
-When deploying the web app from Azure OpenAI Studio, select the same location with the virtual network, and select a proper SKU, so it can support the [virtual network integration feature](/azure/app-service/overview-vnet-integration). 
+Choose **B2 SKU** and adjust the **Name** if it is not available
 
-After the web app is deployed, from the Azure portal networking tab, configure the web app outbound traffic virtual network integration, choose the third subnet that you reserved for web app.
+After the deployment, some modifications need to be made :
 
-:::image type="content" source="../media/use-your-data/web-app-configure-outbound-traffic.png" alt-text="A screenshot showing outbound traffic configuration for the web app." lightbox="../media/use-your-data/web-app-configure-outbound-traffic.png":::
+![image](/media/use-your-data/app_network_status.png)
 
-## Using the API
+1. Disable **public access**
 
-Make sure your sign-in credential has `Cognitive Services OpenAI Contributor` role on your Azure OpenAI resource, and run `az login` first.
+![image](/media/use-your-data/app_disable_public_access.png)
 
-:::image type="content" source="../media/use-your-data/api-local-test-setup-credential.png" alt-text="A screenshot showing the cognitive services OpenAI contributor role in the Azure portal." lightbox="../media/use-your-data/api-local-test-setup-credential.png":::
+3. Create a private endpoint to access to the Web App
 
-### Ingestion API
+4. Inject the Web App in your VNet
 
-See the [ingestion API reference article](/rest/api/azureopenai/ingestion-jobs?context=/azure/ai-services/openai/context/context) for details on the request and response objects used by the ingestion API.
+![image](/media/use-your-data/app_vnet_integration.png)
+![image](/media/use-your-data/app_vnet_status.png)
 
-### Inference API
-
-See the [inference API reference article](../references/on-your-data.md) for details on the request and response objects used by the inference API.
-    
-## Use Microsoft Defender for Cloud
-
-You can now integrate [Microsoft Defender for Cloud](/azure/defender-for-cloud/defender-for-cloud-introduction) (preview) with your Azure resources to protect your applications. Microsoft Defender for Cloud protects your applications with [threat protection for AI workloads](/azure/defender-for-cloud/ai-threat-protection) , providing teams with evidence-based security alerts enriched with Microsoft threat intelligence signals and enables teams to strengthen their [security posture](/azure/defender-for-cloud/ai-security-posture) with integrated security best-practice recommendations.
-
-Use [this form](https://forms.office.com/pages/responsepage.aspx?id=v4j5cvGGr0GRqy180BHbR9EXzLewuFRArQPJzR1tntlURThQR0hYU1MyRVRNODNMV1hBOUEzVlk3NC4u) to apply for access.
+After a while, you can access to the Web App in a private way from your jumphost (adjust **myappname**): use **http://myappname.azurewebsites.net**
