@@ -183,7 +183,6 @@ To set the managed identities via the management API, see [the management API re
   }
 }
 ```
-
 ### Enable trusted service
 
 To allow your Azure AI Search to call your Azure OpenAI `preprocessing-jobs` as custom skill web API, while Azure OpenAI has no public network access, you need to set up Azure OpenAI to bypass Azure AI Search as a trusted service based on managed identity. Azure OpenAI identifies the traffic from your Azure AI Search by verifying the claims in the JSON Web Token (JWT). Azure AI Search must use the system assigned managed identity authentication to call the custom skill web API. 
@@ -198,7 +197,7 @@ To allow access to your Azure OpenAI Service from your client machines, like usi
 
 ## Configure Azure AI Search
 
-You can use basic pricing tier and higher for the search resource. It's not necessary, but if you use the B2 pricing tier, [advanced options](#create-shared-private-link) are available.
+You can use basic pricing tier and higher for the search resource. It's not necessary, but if you use the **B** pricing tier, [advanced options](#create-shared-private-link) are available.
 
 ### Enable managed identity
 
@@ -219,7 +218,6 @@ You can disable public network access of your Azure AI Search resource in the Az
 
 To allow access to your Azure AI Search resource from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/search/service-create-private-endpoint) that connect to your Azure AI Search resource.
 
-
 ### Enable trusted service
 
 You can enable trusted service of your search resource from Azure portal.
@@ -227,24 +225,6 @@ You can enable trusted service of your search resource from Azure portal.
 Go to your search resource's network tab. With the public network access set to **disabled**, select **Allow Azure services on the trusted services list to access this search service.**
 
 ![image](/media/use-your-data/search-trusted-service.png)
-
-You can also use the REST API to enable trusted service. This example uses the Azure CLI and the `jq` tool.
-
-```bash
-rid=/subscriptions/<YOUR-SUBSCRIPTION-ID>/resourceGroups/<YOUR-RESOURCE-GROUP>/providers/Microsoft.Search/searchServices/<YOUR-RESOURCE-NAME>
-apiVersion=2024-03-01-Preview
-#store the resource properties in a variable
-az rest --uri "https://management.azure.com$rid?api-version=$apiVersion" > search.json
-
-#replace bypass with AzureServices using jq
-jq '.properties.networkRuleSet.bypass = "AzureServices"' search.json > search_updated.json
-
-#apply the updated properties to the resource
-az rest --uri "https://management.azure.com$rid?api-version=$apiVersion" \
-    --method PUT \
-    --body @search_updated.json
-
-```
 
 ## Configure Storage Account
 
@@ -271,9 +251,7 @@ So far you have already setup each resource work independently. Next you need to
 | `Storage Blob Data Contributor` | Azure OpenAI | Storage Account | Reads from the input container, and writes the preprocessed result to the output container. |
 | `Cognitive Services OpenAI Contributor` | Azure AI Search | Azure OpenAI | Custom skill. |
 | `Storage Blob Data Reader` | Azure AI Search | Storage Account | Reads document blobs and chunk blobs. |
-| `Reader` | Azure AI Foundry Project | Azure Storage Private Endpoints (Blob & File) | Read search indexes created in blob storage within an AI Foundry Project. |
 | `Cognitive Services OpenAI User` | Web app | Azure OpenAI | Inference. |
-
 
 In the above table, the `Assignee` means the system assigned managed identity of that resource.
 
@@ -357,11 +335,15 @@ You will need to deploy 2 models in Sweden Central
  - gpt-4o-mini
  - text-embedding-ada-002
 
-1. Deploy the gpt-4o model with those parameters
+1. Deploy the model in the Azure OpenAI Studio
+
+![image](/media/use-your-data/aoai_deploy_model.png)
+
+2. Deploy the gpt-4o-mini model with those parameters
 
 ![image](/media/use-your-data/model_gpt4o.png)
 
-2. Deploy the text embedding ada 002 model with those parameters
+3. Deploy the text embedding ada 002 model with those parameters
 
 ![image](/media/use-your-data/model_ada002.png)
 
@@ -423,9 +405,15 @@ After the deployment, some modifications need to be made :
 
 ![image](/media/use-your-data/app_disable_public_access.png)
 
-3. Create a private endpoint to access to the Web App
+2. Create a private endpoint to access to the Web App
 
-4. Inject the Web App in your VNet
+3. Enable the **System Assigned Managed Identity** on the webapp
+
+![image](/media/use-your-data/webapp_smi.png)
+
+5. Assign the Role "**Cognitive Service OpenAI User**" to your Azure OpenAI ressource
+
+6. Inject the Web App in your VNet
 
 ![image](/media/use-your-data/app_vnet_integration.png)
 ![image](/media/use-your-data/app_vnet_status.png)
