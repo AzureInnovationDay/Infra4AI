@@ -186,6 +186,6 @@ To be able to use a Notebook and execute some code, you need to create a compute
 1. Execute the first cell to import python package
 2. Replace the **endpoint** value with your own Azure OpenAI endpoint
 3. If needed, adapt the deployment name too
-4. Execute the second cell to maka a call to openai
+4. Execute the second cell to make a call to openai for a chat completion
 
 
