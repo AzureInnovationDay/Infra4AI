@@ -145,11 +145,12 @@ Before following the steps in this article, make sure you have the following pre
 
 You need to create Private Endpoint for :
 
+- The AML Workspace itslef
 - Azure Blob Storage
 - Azure File Store
 - Azure Key Vault
 
-Use the **pe** subnet dedicated in your VNet.
+Use the **pe** subnet dedicated in your VNet previously created.
 
 Disable Public Access for the **Storage Account and the Key Vault**.
 
