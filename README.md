@@ -25,4 +25,4 @@ Une fois connecté, clique sur "Confirm Microsoft Account" et entre ton code de 
 
 C'est bon, tu est prêt à t'engager sur le lab !
 
-Je crée mon environnemnt de lab privé
+[=> Je crée mon environnemnt de lab privé](https://github.com/deuch/Infra4AI/blob/main/Securerag.md)
