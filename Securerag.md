@@ -66,7 +66,7 @@ In this lab, when asked to create a virtual network
 
 - Choose the existing resource group
 - Name it "vnet-lab"
-- Choose "France Central" as location
+- Choose "**France Central**" as location
 - Add Four Subnets:
     - "pe" : dedicated to the private endpoints, using the 10.0.0.0/24 prefix
     - "AzureBastionSubnet" : dedicated to the Bastion using the 10.0.1.0/26 prefix
@@ -190,17 +190,15 @@ To allow your Azure AI Search to call your Azure OpenAI `preprocessing-jobs` as 
 
 Set `networkAcls.bypass` as `AzureServices` from the management API. For more information, see [Virtual networks article](/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#grant-access-to-trusted-azure-services-for-azure-openai).
 
-
 ### Disable public network access
 
 You can disable public network access of your Azure OpenAI resource in the Azure portal. 
 
 To allow access to your Azure OpenAI Service from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#use-private-endpoints) that connect to your Azure OpenAI resource. Thsi private endpoint will be used by the WebApp, so **it has to be created in France Central**.
 
-
 ## Configure Azure AI Search
 
-You can use basic pricing tier and higher for the search resource. It's not necessary, but if you use the S2 pricing tier, [advanced options](#create-shared-private-link) are available.
+You can use basic pricing tier and higher for the search resource. It's not necessary, but if you use the B2 pricing tier, [advanced options](#create-shared-private-link) are available.
 
 ### Enable managed identity
 
