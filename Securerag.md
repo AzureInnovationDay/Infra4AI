@@ -255,11 +255,9 @@ So far you have already setup each resource work independently. Next you need to
 
 In the above table, the `Assignee` means the system assigned managed identity of that resource.
 
-The admin needs to have the `Owner` role on these resources to add role assignments.
-
 See the [Azure RBAC documentation](/azure/role-based-access-control/role-assignments-portal) for instructions on setting these roles in the Azure portal. You can use the [available script on GitHub](https://github.com/microsoft/sample-app-aoai-chatGPT/blob/main/scripts/role_assignment.sh) to add the role assignments programmatically.
 
-To enable the developers to use these resources to build applications, the admin needs to add the developers' identity with the following role assignments to the resources.
+To enable yout user to use these resources to build applications, you need to configure your identity with the following role assignments to the resources.
 
 |Role| Resource | Description |
 |--|--|--|
