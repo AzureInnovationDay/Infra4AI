@@ -387,6 +387,8 @@ For eg : "What is the contoso mission" ?
 
 Deploy the web app from the Azure OpenAI studio directly
 
+![image](/media/use-your-data/deploy_webapp_menu.png)
+
 ![image](/media/use-your-data/deploy_webapp.png)
 
 Choose **B2 SKU** and adjust the **Name** if it is not available
