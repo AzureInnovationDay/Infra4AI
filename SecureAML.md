@@ -1,8 +1,6 @@
 
 # Workspace Managed Virtual Network Isolation
 
-[!INCLUDE [dev v2](includes/machine-learning-dev-v2.md)]
-
 Azure Machine Learning provides support for managed virtual network (managed virtual network) isolation. Managed virtual network isolation streamlines and automates your network isolation configuration with a built-in, workspace-level Azure Machine Learning managed virtual network. The managed virtual network secures your managed Azure Machine Learning resources, such as compute instances, compute clusters, serverless compute, and managed online endpoints. 
 
 Securing your workspace with a *managed network* provides network isolation for __outbound__ access from the workspace and managed computes. An *Azure Virtual Network that you create and manage* is used to provide network isolation __inbound__ access to the workspace. For example, a private endpoint for the workspace is created in your Azure Virtual Network. Any clients connecting to the virtual network can access the workspace through the private endpoint. When running jobs on managed computes, the managed network restricts what the compute can access.
@@ -91,19 +89,22 @@ Before following the steps in this article, make sure you have the following pre
 > The managed VNet is automatically provisioned when you create a compute resource. When allowing automatic creation, it can take around __30 minutes__ to create the first compute resource as it is also provisioning the network. If you configured FQDN outbound rules, the first FQDN rule adds around __10 minutes__ to the provisioning time. For more information, see [Manually provision the network](#manually-provision-a-managed-vnet).
 
 
-### Azure portal]
+### Azure portal
 
 * __Create a new workspace__:
 
     1. Sign in to the [Azure portal](https://portal.azure.com), and choose Azure Machine Learning from Create a resource menu.
     2. Provide the required information on the __Basics__ tab.
-    3. From the __Networking__ tab, select __Private with Approved Outbound__.
+
+       ![image](/media/how-to-managed-network/aml_create_basics.png)
+ 
+    4. From the __Networking__ tab, select __Private with Approved Outbound__.
 
        ![image](/media/how-to-managed-network/private_outbound_settings.png)
     
-    4. Check the **Provision Managed Network (Preview)**
+    5. Check the **Provision Managed Network (Preview)**
        
-    5. Add an _outbound rule_ for the Azure OpenAI ressource, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
+    6. Add an _outbound rule_ for the Azure OpenAI ressource, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
     
         * __Rule name__: A name for the rule. The name must be unique for this workspace.
         * __Destination type__: Private Endpoint
