@@ -57,8 +57,8 @@ If you add the following services to the virtual network by using either a servi
 
 | Service | Endpoint information | Allow trusted information |
 | ----- | ----- | ----- |
-| __Azure Key Vault__| [Service endpoint](https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints)</br>[Private endpoint](https://learn.microsoft.com/en-us/azure/key-vault/general/private-link-service) | [Allow trusted Microsoft services to bypass this firewall](how-to-secure-workspace-vnet.md#secure-azure-key-vault) |
-| __Azure Storage Account__ | [Service and private endpoint](how-to-secure-workspace-vnet.md?tabs=se#secure-azure-storage-accounts)</br>[Private endpoint](how-to-secure-workspace-vnet.md?tabs=pe#secure-azure-storage-accounts) | [Grant access from Azure resource instances](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security#grant-access-from-azure-resource-instances)</br>__or__</br>[Grant access to trusted Azure services](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security#grant-access-to-trusted-azure-services) |
+| __Azure Key Vault__| [Service endpoint]([https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints](https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints))</br>[Private endpoint](https://learn.microsoft.com/en-us/azure/key-vault/general/private-link-service) | [Allow trusted Microsoft services to bypass this firewall](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-secure-workspace-vnet?view=azureml-api-2#secure-azure-key-vault) |
+| __Azure Storage Account__ | [Service and private endpoint](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-secure-workspace-vnet?view=azureml-api-2&tabs=se#secure-azure-storage-accounts)</br>[Private endpoint](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-secure-workspace-vnet?view=azureml-api-2&tabs=pe#secure-azure-storage-accounts) | [Grant access from Azure resource instances](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security#grant-access-from-azure-resource-instances)</br>__or__</br>[Grant access to trusted Azure services](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security#grant-access-to-trusted-azure-services) |
 | __Azure Container Registry__ | [Private endpoint](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-private-link) | [Allow trusted services](https://learn.microsoft.com/en-us/azure/container-registry/allow-access-trusted-services) |
 
 ## Prerequisites
@@ -71,9 +71,9 @@ Before following the steps in this article, make sure you have the following pre
 
 * The __Microsoft.Network__ resource provider must be registered for your Azure subscription. This resource provider is used by the workspace when creating private endpoints for the managed virtual network.
 
-    For information on registering resource providers, see [Resolve errors for resource provider registration](/azure/azure-resource-manager/templates/error-register-resource-provider).
+    For information on registering resource providers, see [Resolve errors for resource provider registration](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/error-register-resource-provider).
 
-* The Azure identity you use when deploying a managed network requires the following [Azure role-based access control (Azure RBAC)](/azure/role-based-access-control/overview) actions to create private endpoints:
+* The Azure identity you use when deploying a managed network requires the following [Azure role-based access control (Azure RBAC)](https://learn.microsoft.com/en-us/azure/role-based-access-control/overview) actions to create private endpoints:
 
     * `Microsoft.MachineLearningServices/workspaces/privateEndpointConnections/read`
     * `Microsoft.MachineLearningServices/workspaces/privateEndpointConnections/write`
@@ -81,12 +81,12 @@ Before following the steps in this article, make sure you have the following pre
 ---
 
 > [!NOTE]
-> If you are using UAI workspace please make sure to add the Azure AI Enterprise Network Connection Approver role to your identity. For more information, see [User-assigned managed identity](how-to-identity-based-service-authentication.md).
+> If you are using UAI workspace please make sure to add the Azure AI Enterprise Network Connection Approver role to your identity. For more information, see [User-assigned managed identity](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-identity-based-service-authentication?view=azureml-api-2).
 
 ## Configure a managed virtual network to allow only approved outbound
 
 > [!TIP]
-> The managed VNet is automatically provisioned when you create a compute resource. When allowing automatic creation, it can take around __30 minutes__ to create the first compute resource as it is also provisioning the network. If you configured FQDN outbound rules, the first FQDN rule adds around __10 minutes__ to the provisioning time. For more information, see [Manually provision the network](#manually-provision-a-managed-vnet).
+> The managed VNet is automatically provisioned when you create a compute resource. When allowing automatic creation, it can take around __30 minutes__ to create the first compute resource as it is also provisioning the network. If you configured FQDN outbound rules, the first FQDN rule adds around __10 minutes__ to the provisioning time. For more information, see [Manually provision the network](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=portal#manually-provision-a-managed-vnet).
 
 
 ### Azure portal
@@ -137,7 +137,7 @@ Before following the steps in this article, make sure you have the following pre
     10. Continue creating the workspace as normal.
 
 > [!TIP]
-> Azure Machine Learning managed VNet doesn't support creating a private endpoint to all Azure resource types. For a list of supported resources, see the [Private endpoints](#private-endpoints)  section.
+> Azure Machine Learning managed VNet doesn't support creating a private endpoint to all Azure resource types. For a list of supported resources, see the [Private endpoints](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=portal#private-endpoints)  section.
 
 ---
 
