@@ -168,26 +168,13 @@ To allow your Azure AI Search and Storage Account to recognize your Azure OpenAI
 
 ![image](/media/use-your-data/openai-managed-identity.png)
 
-To set the managed identities via the management API, see [the management API reference documentation](/rest/api/aiservices/accountmanagement/accounts/update#identity).
-
-```json
-
-"identity": {
-  "principalId": "<YOUR-PRINCIPAL-ID>",
-  "tenantId": "<YOUR-TENNANT-ID>",
-  "type": "SystemAssigned, UserAssigned", 
-  "userAssignedIdentities": {
-    "/subscriptions/<YOUR-SUBSCIRPTION-ID>/resourceGroups/my-resource-group",
-    "principalId": "<YOUR-PRINCIPAL-ID>", 
-    "clientId": "<YOUR-CLIENT-ID>"
-  }
-}
-```
 ### Enable trusted service
 
-To allow your Azure AI Search to call your Azure OpenAI `preprocessing-jobs` as custom skill web API, while Azure OpenAI has no public network access, you need to set up Azure OpenAI to bypass Azure AI Search as a trusted service based on managed identity. Azure OpenAI identifies the traffic from your Azure AI Search by verifying the claims in the JSON Web Token (JWT). Azure AI Search must use the system assigned managed identity authentication to call the custom skill web API. 
+To allow your Azure AI Search to call your Azure OpenAI `preprocessing-jobs` as custom skill web API, while Azure OpenAI has no public network access, you need to set up Azure OpenAI to bypass Azure AI Search as a trusted service based on managed identity. Azure OpenAI identifies the traffic from your Azure AI Search by verifying the claims in the JSON Web Token (JWT). Azure AI Search must use the system assigned managed identity authentication to call the custom skill web API.
 
-Set `networkAcls.bypass` as `AzureServices` from the management API. For more information, see [Virtual networks article](/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#grant-access-to-trusted-azure-services-for-azure-openai).
+The easy way is to do it in the Azure portal:
+
+![image](/media/use-your-data/aoai_trusted.png)
 
 ### Disable public network access
 
@@ -251,7 +238,6 @@ So far you have already setup each resource work independently. Next you need to
 | `Storage Blob Data Contributor` | Azure OpenAI | Storage Account | Reads from the input container, and writes the preprocessed result to the output container. |
 | `Cognitive Services OpenAI Contributor` | Azure AI Search | Azure OpenAI | Custom skill. |
 | `Storage Blob Data Reader` | Azure AI Search | Storage Account | Reads document blobs and chunk blobs. |
-| `Cognitive Services OpenAI User` | Web app | Azure OpenAI | Inference. |
 
 In the above table, the `Assignee` means the system assigned managed identity of that resource.
 
