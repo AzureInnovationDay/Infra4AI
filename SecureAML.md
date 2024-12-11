@@ -1,8 +1,6 @@
 
 # Workspace Managed Virtual Network Isolation
 
-[!INCLUDE [dev v2](includes/machine-learning-dev-v2.md)]
-
 Azure Machine Learning provides support for managed virtual network (managed virtual network) isolation. Managed virtual network isolation streamlines and automates your network isolation configuration with a built-in, workspace-level Azure Machine Learning managed virtual network. The managed virtual network secures your managed Azure Machine Learning resources, such as compute instances, compute clusters, serverless compute, and managed online endpoints. 
 
 Securing your workspace with a *managed network* provides network isolation for __outbound__ access from the workspace and managed computes. An *Azure Virtual Network that you create and manage* is used to provide network isolation __inbound__ access to the workspace. For example, a private endpoint for the workspace is created in your Azure Virtual Network. Any clients connecting to the virtual network can access the workspace through the private endpoint. When running jobs on managed computes, the managed network restricts what the compute can access.
@@ -25,10 +23,10 @@ There are two different configuration modes for outbound traffic from the manage
 1: You can use outbound rules with _allow only approved outbound_ mode to achieve the same result as using allow internet outbound. The differences are:
 
 * You must add rules for each outbound connection you need to allow.
-* Adding FQDN outbound rules __increase your costs__ as this rule type uses Azure Firewall. For more information, see [Pricing](#pricing)
+* Adding FQDN outbound rules __increase your costs__ as this rule type uses Azure Firewall. For more information, see [Pricing](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=azure-cli#pricing)
 * The default rules for _allow only approved outbound_ are designed to minimize the risk of data exfiltration. Any outbound rules you add might increase your risk.
 
-The managed virtual network is preconfigured with [required default rules](#list-of-required-rules). It's also configured for private endpoint connections to your workspace, workspace's default storage, container registry, and key vault __if they're configured as private__ or __the workspace isolation mode is set to allow only approved outbound__. After choosing the isolation mode, you only need to consider other outbound requirements you might need to add.
+The managed virtual network is preconfigured with [required default rules](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=portal#list-of-required-rules)). It's also configured for private endpoint connections to your workspace, workspace's default storage, container registry, and key vault __if they're configured as private__ or __the workspace isolation mode is set to allow only approved outbound__. After choosing the isolation mode, you only need to consider other outbound requirements you might need to add.
 
 The following diagram shows a managed virtual network configured to __allow internet outbound__:
 
@@ -51,7 +49,7 @@ If you want to use the integrated notebook or create datasets in the default sto
 
 Part of Azure Machine Learning studio runs locally in the client's web browser, and communicates directly with the default storage for the workspace. Creating a private endpoint or service endpoint (for the default storage account) in the client's virtual network ensures that the client can communicate with the storage account.
 
-For more information on creating a private endpoint or service endpoint, see the [Connect privately to a storage account](/azure/storage/common/storage-private-endpoints) and [Service Endpoints](/azure/virtual-network/virtual-network-service-endpoints-overview) articles.
+For more information on creating a private endpoint or service endpoint, see the [Connect privately to a storage account](https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints) and [Service Endpoints](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview) articles.
 
 ### Secured associated resources
 
@@ -59,9 +57,9 @@ If you add the following services to the virtual network by using either a servi
 
 | Service | Endpoint information | Allow trusted information |
 | ----- | ----- | ----- |
-| __Azure Key Vault__| [Service endpoint](/azure/key-vault/general/overview-vnet-service-endpoints)</br>[Private endpoint](/azure/key-vault/general/private-link-service) | [Allow trusted Microsoft services to bypass this firewall](how-to-secure-workspace-vnet.md#secure-azure-key-vault) |
-| __Azure Storage Account__ | [Service and private endpoint](how-to-secure-workspace-vnet.md?tabs=se#secure-azure-storage-accounts)</br>[Private endpoint](how-to-secure-workspace-vnet.md?tabs=pe#secure-azure-storage-accounts) | [Grant access from Azure resource instances](/azure/storage/common/storage-network-security#grant-access-from-azure-resource-instances)</br>__or__</br>[Grant access to trusted Azure services](/azure/storage/common/storage-network-security#grant-access-to-trusted-azure-services) |
-| __Azure Container Registry__ | [Private endpoint](/azure/container-registry/container-registry-private-link) | [Allow trusted services](/azure/container-registry/allow-access-trusted-services) |
+| __Azure Key Vault__| [Service endpoint](https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints)</br>[Private endpoint](https://learn.microsoft.com/en-us/azure/key-vault/general/private-link-service) | [Allow trusted Microsoft services to bypass this firewall](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-secure-workspace-vnet?view=azureml-api-2#secure-azure-key-vault) |
+| __Azure Storage Account__ | [Service and private endpoint](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-secure-workspace-vnet?view=azureml-api-2&tabs=se#secure-azure-storage-accounts)</br>[Private endpoint](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-secure-workspace-vnet?view=azureml-api-2&tabs=pe#secure-azure-storage-accounts) | [Grant access from Azure resource instances](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security#grant-access-from-azure-resource-instances)</br>__or__</br>[Grant access to trusted Azure services](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security#grant-access-to-trusted-azure-services) |
+| __Azure Container Registry__ | [Private endpoint](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-private-link) | [Allow trusted services](https://learn.microsoft.com/en-us/azure/container-registry/allow-access-trusted-services) |
 
 ## Prerequisites
 
@@ -73,9 +71,9 @@ Before following the steps in this article, make sure you have the following pre
 
 * The __Microsoft.Network__ resource provider must be registered for your Azure subscription. This resource provider is used by the workspace when creating private endpoints for the managed virtual network.
 
-    For information on registering resource providers, see [Resolve errors for resource provider registration](/azure/azure-resource-manager/templates/error-register-resource-provider).
+    For information on registering resource providers, see [Resolve errors for resource provider registration](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/error-register-resource-provider).
 
-* The Azure identity you use when deploying a managed network requires the following [Azure role-based access control (Azure RBAC)](/azure/role-based-access-control/overview) actions to create private endpoints:
+* The Azure identity you use when deploying a managed network requires the following [Azure role-based access control (Azure RBAC)](https://learn.microsoft.com/en-us/azure/role-based-access-control/overview) actions to create private endpoints:
 
     * `Microsoft.MachineLearningServices/workspaces/privateEndpointConnections/read`
     * `Microsoft.MachineLearningServices/workspaces/privateEndpointConnections/write`
@@ -83,27 +81,31 @@ Before following the steps in this article, make sure you have the following pre
 ---
 
 > [!NOTE]
-> If you are using UAI workspace please make sure to add the Azure AI Enterprise Network Connection Approver role to your identity. For more information, see [User-assigned managed identity](how-to-identity-based-service-authentication.md).
+> If you are using UAI workspace please make sure to add the Azure AI Enterprise Network Connection Approver role to your identity. For more information, see [User-assigned managed identity](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-identity-based-service-authentication?view=azureml-api-2).
 
 ## Configure a managed virtual network to allow only approved outbound
 
 > [!TIP]
-> The managed VNet is automatically provisioned when you create a compute resource. When allowing automatic creation, it can take around __30 minutes__ to create the first compute resource as it is also provisioning the network. If you configured FQDN outbound rules, the first FQDN rule adds around __10 minutes__ to the provisioning time. For more information, see [Manually provision the network](#manually-provision-a-managed-vnet).
+> The managed VNet is automatically provisioned when you create a compute resource. When allowing automatic creation, it can take around __30 minutes__ to create the first compute resource as it is also provisioning the network. If you configured FQDN outbound rules, the first FQDN rule adds around __10 minutes__ to the provisioning time. For more information, see [Manually provision the network](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=portal#manually-provision-a-managed-vnet).
 
 
-### Azure portal]
+### Azure portal
 
 * __Create a new workspace__:
 
     1. Sign in to the [Azure portal](https://portal.azure.com), and choose Azure Machine Learning from Create a resource menu.
     2. Provide the required information on the __Basics__ tab.
-    3. From the __Networking__ tab, select __Private with Approved Outbound__.
+       ![image](/media/how-to-managed-network/aml_create_basics.png)
+ 
+    4. From the __Networking__ tab, select __Private with Approved Outbound__.
 
        ![image](/media/how-to-managed-network/private_outbound_settings.png)
     
-    4. Check the **Provision Managed Network (Preview)**
+    5. Check the **Provision Managed Network (Preview)**
        
-    5. Add an _outbound rule_ for the Azure OpenAI ressource, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
+    6. Choose a **Basic** firewall SKU 
+       
+    7. Add an _outbound rule_ for the Azure OpenAI ressource, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
     
         * __Rule name__: A name for the rule. The name must be unique for this workspace.
         * __Destination type__: Private Endpoint
@@ -118,7 +120,7 @@ Before following the steps in this article, make sure you have the following pre
 
         ![image](/media/how-to-managed-network/outbound_aoai_rule.png)
        
-  5. Add 2 _outbound rule_ for the pypi.org repository, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
+  8. Add 2 news _outbound rule_ for the pypi.org repository, select __Add user-defined outbound rules__ from the __Networking__ tab. From the __Workspace outbound rules__ sidebar, provide the following information:
     
         The destination type is __FQDN__, provide the following information:
 
@@ -130,12 +132,12 @@ Before following the steps in this article, make sure you have the following pre
         * __Rule Name__: Name of the rule, pypifiles
         * __FQDN destination__: files.pythonhosted.org
         
-    7. Select **__Save__** to save the rules. You can continue using __Add user-defined outbound rules__ to add rules.
+    9. Select **__Save__** to save the rules. You can continue using __Add user-defined outbound rules__ to add rules.
 
-    8. Continue creating the workspace as normal.
+    10. Continue creating the workspace as normal.
 
 > [!TIP]
-> Azure Machine Learning managed VNet doesn't support creating a private endpoint to all Azure resource types. For a list of supported resources, see the [Private endpoints](#private-endpoints)  section.
+> Azure Machine Learning managed VNet doesn't support creating a private endpoint to all Azure resource types. For a list of supported resources, see the [Private endpoints](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=portal#private-endpoints)  section.
 
 ---
 
@@ -143,11 +145,12 @@ Before following the steps in this article, make sure you have the following pre
 
 You need to create Private Endpoint for :
 
+- The AML Workspace itslef
 - Azure Blob Storage
 - Azure File Store
 - Azure Key Vault
 
-Use the **pe** subnet dedicated in your VNet.
+Use the **pe** subnet dedicated in your VNet previously created.
 
 Disable Public Access for the **Storage Account and the Key Vault**.
 
@@ -183,6 +186,6 @@ To be able to use a Notebook and execute some code, you need to create a compute
 1. Execute the first cell to import python package
 2. Replace the **endpoint** value with your own Azure OpenAI endpoint
 3. If needed, adapt the deployment name too
-4. Execute the second cell to maka a call to openai
+4. Execute the second cell to make a call to openai for a chat completion
 
 
