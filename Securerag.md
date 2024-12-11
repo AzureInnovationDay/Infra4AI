@@ -41,7 +41,7 @@ This article describes network settings related to disabling public network for 
 
 ## Create resource group
 
-Create a resource group, so you can organize all the relevant resources. Choose the name you like and be sure to choose "France central" as a location.
+Create a resource group, so you can organize all the relevant resources. Choose the name you like and be sure to choose "**France central**" as a location.
 
 The resources in the resource group include but are not limited to:
 * One Virtual network
@@ -53,7 +53,7 @@ The resources in the resource group include but are not limited to:
 * One Web App with virtual network integrated
 * Multiple Private DNS zone, so the Web App finds the IP of your Azure OpenAI, and you can connect from a jumphost VM to your Cognitive Services
 
-## Create virtual network
+## Create and configure a virtual network
 
 The virtual network has four subnets. 
 
@@ -65,7 +65,7 @@ The virtual network has four subnets.
 In this lab, when asked to create a virtual network
 
 - Choose the existing resource group
-- Name it "vnet-lab"
+- Name it "vnet-lab-rag"
 - Choose "**France Central**" as location
 - Add Four Subnets:
     - "pe" : dedicated to the private endpoints, using the 10.0.0.0/24 prefix
@@ -154,11 +154,11 @@ The following procedure creates a virtual network with a resource subnet, an Azu
 
 15. Select **Review + create** at the bottom of the screen, and when validation passes, select **Create**.
 
-## Configure Azure OpenAI
+## Create and configure Azure OpenAI
 
 ### Use Sweden Central
 
-During creation of Azure OpenAI resource, choose **Sweden Cental**
+During creation of Azure OpenAI resource, choose **Sweden Cental**. It will let you use gpt-4o models
 
 ### Enable managed identity
 
@@ -180,7 +180,7 @@ You can disable public network access of your Azure OpenAI resource in the Azure
 
 To allow access to your Azure OpenAI Service from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](https://learn.microsoft.com/en-us/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#use-private-endpoints) that connect to your Azure OpenAI resource. Thsi private endpoint will be used by the WebApp, so **it has to be created in France Central**.
 
-## Configure Azure AI Search
+## Create and configure Azure AI Search
 
 Please use the **B** pricing tier for your AI Search resource
 
@@ -211,7 +211,7 @@ Go to your search resource's network tab. With the public network access set to 
 
 ![image](/media/use-your-data/search-trusted-service.png)
 
-## Configure Storage Account
+## Create and configure a Storage Account
 
 ### Enable trusted service
 
@@ -247,9 +247,9 @@ To enable yout user to use these resources to build applications, you need to co
 | `Cognitive Services OpenAI Contributor` | Azure OpenAI | Call public ingestion API from Azure OpenAI Studio. The `Contributor` role is not enough, because if you only have `Contributor` role, you cannot call data plane API via Microsoft Entra ID authentication, and Microsoft Entra ID authentication is required in the secure setup described in this article. |
 | `Cognitive Services User` | Azure OpenAI | List API-Keys from Azure OpenAI Studio.|
 
-## Configure the jumphost VM
+## Create and Configure the jumphost VM
 
-To access the Azure OpenAI Service from your on-premises client machines, one of the approaches is to use a Jump host VM with a Bastion.
+**To access the Azure OpenAI Service from your on-premises client machines**, one of the approaches is to use a Jump host VM with a Bastion.
 
 1. Create a new VM :
 
@@ -304,7 +304,9 @@ To access the Azure OpenAI Service from your on-premises client machines, one of
 
 ## Azure OpenAI Studio
 
-You should be able to use all Azure OpenAI Studio features, including both ingestion and inference, from your on-premises client machines.
+You should be able to use all Azure OpenAI Studio features, including both ingestion and inference, from your the jump host VM.
+
+***For now, you will need to use only your jump VM to use the Azure resources that you've made private.***
 
 ## Deploy the 2 models
 
