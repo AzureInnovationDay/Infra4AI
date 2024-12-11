@@ -11,10 +11,10 @@ When you use Azure OpenAI On Your Data to ingest data from Azure blob storage, l
 
 * Steps 1 and 2 are only used for file upload.
 * Downloading URLs to your blob storage is not illustrated in this diagram. After web pages are downloaded from the internet and uploaded to blob storage, steps 3 onward are the same.
-* Two indexers, two indexes, two data sources and a [custom skill](/azure/search/cognitive-search-custom-skill-interface) are created in the Azure AI Search resource.
+* Two indexers, two indexes, two data sources and a [custom skill](https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-interface) are created in the Azure AI Search resource.
 * The chunks container is created in the blob storage.
 * If the schedule triggers the ingestion, the ingestion process starts from step 7.
-*  Azure OpenAI's `preprocessing-jobs` API implements the [Azure AI Search customer skill web API protocol](/azure/search/cognitive-search-custom-skill-web-api), and processes the documents in a queue. 
+*  Azure OpenAI's `preprocessing-jobs` API implements the [Azure AI Search customer skill web API protocol](https://learn.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-web-api), and processes the documents in a queue. 
 * Azure OpenAI:
     1. Internally uses the first indexer created earlier to crack the documents.
     1. Uses a heuristic-based algorithm to perform chunking. It honors table layouts and other formatting elements in the chunk boundary to ensure the best chunking quality.
@@ -100,8 +100,6 @@ The following procedure creates a virtual network with a resource subnet, an Azu
 
     Azure Bastion uses your browser to connect to VMs in your virtual network over secure shell (SSH) or remote desktop protocol (RDP) by using their private IP addresses. The VMs don't need public IP addresses, client software, or special configuration. For more information about Azure Bastion, see [Azure Bastion](../articles/bastion/bastion-overview.md)
 
-    >[!NOTE]
-    >[!INCLUDE [Pricing](~/reusable-content/ce-skilling/azure/includes/bastion-pricing.md)]
 
 6. Enter or select the following information in **Azure Bastion**:
 
@@ -180,11 +178,11 @@ The easy way is to do it in the Azure portal:
 
 You can disable public network access of your Azure OpenAI resource in the Azure portal. 
 
-To allow access to your Azure OpenAI Service from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#use-private-endpoints) that connect to your Azure OpenAI resource. Thsi private endpoint will be used by the WebApp, so **it has to be created in France Central**.
+To allow access to your Azure OpenAI Service from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](https://learn.microsoft.com/en-us/azure/ai-services/cognitive-services-virtual-networks?tabs=portal#use-private-endpoints) that connect to your Azure OpenAI resource. Thsi private endpoint will be used by the WebApp, so **it has to be created in France Central**.
 
 ## Configure Azure AI Search
 
-You can use basic pricing tier and higher for the search resource. It's not necessary, but if you use the **B** pricing tier, [advanced options](#create-shared-private-link) are available.
+Please use the **B** pricing tier for your AI Search resource
 
 ### Enable managed identity
 
@@ -197,13 +195,13 @@ As Azure OpenAI uses managed identity to access Azure AI Search, you need to ena
 
 ![image](/media/use-your-data/managed-identity-ai-search.png)
 
-For more information, see the [Azure AI Search RBAC article](/azure/search/search-security-enable-roles).
+For more information, see the [Azure AI Search RBAC article](https://learn.microsoft.com/en-us/azure/search/search-security-enable-roles).
 
 ### Disable public network access
 
 You can disable public network access of your Azure AI Search resource in the Azure portal. 
 
-To allow access to your Azure AI Search resource from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/search/service-create-private-endpoint) that connect to your Azure AI Search resource.
+To allow access to your Azure AI Search resource from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](https://learn.microsoft.com/en-us/azure/search/service-create-private-endpoint) that connect to your Azure AI Search resource.
 
 ### Enable trusted service
 
@@ -217,7 +215,7 @@ Go to your search resource's network tab. With the public network access set to 
 
 ### Enable trusted service
 
-To allow access to your Storage Account from Azure OpenAI and Azure AI Search, you need to set up Storage Account to bypass your Azure OpenAI and Azure AI Search as [trusted services based on managed identity](/azure/storage/common/storage-network-security?tabs=azure-portal#trusted-access-based-on-a-managed-identity).
+To allow access to your Storage Account from Azure OpenAI and Azure AI Search, you need to set up Storage Account to bypass your Azure OpenAI and Azure AI Search as [trusted services based on managed identity](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-portal#trusted-access-based-on-a-managed-identity).
 
 In the Azure portal, navigate to your storage account networking tab, choose "Selected networks", and then select **Allow Azure services on the trusted services list to access this storage account** and click Save.
 
@@ -225,7 +223,7 @@ In the Azure portal, navigate to your storage account networking tab, choose "Se
 
 You can disable public network access of your Storage Account in the Azure portal. 
 
-To allow access to your Storage Account from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](/azure/storage/common/storage-private-endpoints) that connect to your blob storage.
+To allow access to your Storage Account from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints) that connect to your blob storage.
 
 ## Role assignments
 
@@ -241,8 +239,7 @@ So far you have already setup each resource work independently. Next you need to
 
 In the above table, the `Assignee` means the system assigned managed identity of that resource.
 
-See the [Azure RBAC documentation](/azure/role-based-access-control/role-assignments-portal) for instructions on setting these roles in the Azure portal. You can use the [available script on GitHub](https://github.com/microsoft/sample-app-aoai-chatGPT/blob/main/scripts/role_assignment.sh) to add the role assignments programmatically.
-
+See the [Azure RBAC documentation](https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal) for instructions on setting these roles in the Azure portal. 
 To enable yout user to use these resources to build applications, you need to configure your identity with the following role assignments to the resources.
 
 |Role| Resource | Description |
