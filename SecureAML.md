@@ -49,7 +49,7 @@ If you want to use the integrated notebook or create datasets in the default sto
 
 Part of Azure Machine Learning studio runs locally in the client's web browser, and communicates directly with the default storage for the workspace. Creating a private endpoint or service endpoint (for the default storage account) in the client's virtual network ensures that the client can communicate with the storage account.
 
-For more information on creating a private endpoint or service endpoint, see the [Connect privately to a storage account](https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints) and [Service Endpoints](/azure/virtual-network/virtual-network-service-endpoints-overview) articles.
+For more information on creating a private endpoint or service endpoint, see the [Connect privately to a storage account](https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints) and [Service Endpoints]((https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview) articles.
 
 ### Secured associated resources
 
