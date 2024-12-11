@@ -217,13 +217,9 @@ Go to your search resource's network tab. With the public network access set to 
 
 To allow access to your Storage Account from Azure OpenAI and Azure AI Search, you need to set up Storage Account to bypass your Azure OpenAI and Azure AI Search as [trusted services based on managed identity](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-portal#trusted-access-based-on-a-managed-identity).
 
-In the Azure portal, navigate to your storage account networking tab, choose "Selected networks", and then select **Allow Azure services on the trusted services list to access this storage account** and click Save.
+In the Azure portal, navigate to your storage account networking tab, choose "**Enabled from selected virtual networks and IP addresses**", and then select **Allow Azure services on the trusted services list to access this storage account** and click Save.
 
-### Disable public network access
-
-You can disable public network access of your Storage Account in the Azure portal. 
-
-To allow access to your Storage Account from your client machines, like using Azure OpenAI Studio, you need to create [private endpoint connections](https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints) that connect to your blob storage.
+It will restrict public access to your Storage Account too.
 
 ## Role assignments
 
