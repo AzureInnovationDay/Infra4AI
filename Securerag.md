@@ -393,7 +393,7 @@ After the deployment, some modifications need to be made :
 
 ![image](/media/use-your-data/webapp_smi.png)
 
-5. Assign the Role "**Cognitive Service OpenAI User**" og the System assigned identity to your **Azure OpenAI** ressource
+5. Assign the Role "**Cognitive Service OpenAI User**" of the System assigned identity to your **Azure OpenAI** ressource
 
 6. Inject the Web App in your VNet
 
