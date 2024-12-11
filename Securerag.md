@@ -73,7 +73,7 @@ In this lab, when asked to create a virtual network
     - "appservice" : dedicated to the Web app Service using the 10.0.2.0/24 prefix
     - "vms" : dedicated to the jumphost VM using the 10.0.1.64/27 prefix
     
-To create a virtual network, you can refer to this documentation : https://learn.microsoft.com/en-us/azure/virtual-network/quick-create-portal.
+To create a virtual network, you can refer to this documentation : [Create a Virtual Network](https://learn.microsoft.com/en-us/azure/virtual-network/quick-create-portal).
 
 The following procedure creates a virtual network with a resource subnet, an Azure Bastion subnet, and an Azure Bastion host.
 
@@ -98,7 +98,7 @@ The following procedure creates a virtual network with a resource subnet, an Azu
 
 5. Select **Enable Bastion** in the **Azure Bastion** section of the **Security** tab.
 
-    Azure Bastion uses your browser to connect to VMs in your virtual network over secure shell (SSH) or remote desktop protocol (RDP) by using their private IP addresses. The VMs don't need public IP addresses, client software, or special configuration. For more information about Azure Bastion, see [Azure Bastion](../articles/bastion/bastion-overview.md)
+    Azure Bastion uses your browser to connect to VMs in your virtual network over secure shell (SSH) or remote desktop protocol (RDP) by using their private IP addresses. The VMs don't need public IP addresses, client software, or special configuration. For more information about Azure Bastion, see [Azure Bastion](https://learn.microsoft.com/en-us/azure/bastion/bastion-overview))
 
 
 6. Enter or select the following information in **Azure Bastion**:
