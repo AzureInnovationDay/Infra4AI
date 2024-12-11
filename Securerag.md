@@ -396,3 +396,5 @@ After the deployment, some modifications need to be made :
 ![image](/media/use-your-data/app_vnet_status.png)
 
 After a while, you can access to the Web App in a private way from your jumphost (adjust **myappname**): use **http://myappname.azurewebsites.net**
+
+**Next Step ->** [=> Create your Azure Machine Learning Private Workspace](https://github.com/deuch/Infra4AI/blob/main/SecureAML.md)
